@@ -19,7 +19,7 @@
         <router-view></router-view>
       </keep-alive>
     </div>
-    <div class="app-footer">
+    <div class="app-foot">
       <p>© 2016 zk MIT</p>
     </div>
   </div>

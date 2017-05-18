@@ -24,15 +24,15 @@
       </div>
     </div>
     <div class="index-right">
+      <slide-show :slidesData="slidesData" :Inv="speed" @onchange="reciveIndex"></slide-show>
       <div class="index-board-list">
         <div class="index-board-item" 
         v-for="(item, index) in boardList"
         :class="[{'line-last' : index % 2 !== 0}, 'index-board-' + item.id]"
-        :style="item.imgStyle"
         >
-          <div class="index-board-item-inner">
+          <div class="index-board-item-inner" :style="'background:url('+ item.img +') no-repeat;'">
             <h2>{{ item.title }}</h2>
-            <p>{{ item.description }} -- {{ item.img }}</p>
+            <p>{{ item.description }}</p>
             <div class="index-board-button">
               <a href="#" class="button">立即购买</a>
             </div>  
@@ -45,8 +45,22 @@
 
 <script>
 import image1 from '@/assets/images/1.png'
+import image2 from '@/assets/images/2.png'
+import image3 from '@/assets/images/3.png'
+import image4 from '@/assets/images/4.png'
+import slideShow from '@/components/slideShow'
 export default {
   name: 'indexPage',
+  components: {
+    slideShow
+  },
+  created: function () {
+    this.$http.get('/api/getNewsList').then((res) => {
+      this.newsList = res.data
+    }, function (err) {
+      console.log(err)
+    })
+  },
   data () {
     return {
       productList: {
@@ -96,24 +110,7 @@ export default {
           ]
         }
       },
-      newsList: [
-        {
-          title: 'news1',
-          url: 'news1'
-        },
-        {
-          title: 'news2',
-          url: 'news2'
-        },
-        {
-          title: 'news3',
-          url: 'news3'
-        },
-        {
-          title: 'news4',
-          url: 'news4'
-        }
-      ],
+      newsList: [],
       boardList: [
         {
           title: '开放产品',
@@ -129,7 +126,7 @@ export default {
           id: 'earth',
           toKey: 'count',
           saleout: false,
-          img: image1
+          img: image2
         },
         {
           title: '使命必达',
@@ -137,7 +134,7 @@ export default {
           id: 'loud',
           toKey: 'forecast',
           saleout: true,
-          img: image1
+          img: image3
         },
         {
           title: '勇攀高峰',
@@ -145,9 +142,37 @@ export default {
           id: 'hill',
           toKey: 'publish',
           saleout: false,
-          img: image1
+          img: image4
         }
-      ]
+      ],
+      slidesData: [
+        {
+          src: require('@/assets/slideShow/pic1.jpg'),
+          title: 'xxx1',
+          href: 'detail/analysis'
+        },
+        {
+          src: require('@/assets/slideShow/pic2.jpg'),
+          title: 'xxx2',
+          href: 'detail/count'
+        },
+        {
+          src: require('@/assets/slideShow/pic3.jpg'),
+          title: 'xxx3',
+          href: 'http://xxx.xxx.com'
+        },
+        {
+          src: require('@/assets/slideShow/pic4.jpg'),
+          title: 'xxx4',
+          href: 'detail/forecast'
+        }
+      ],
+      speed: 1000
+    }
+  },
+  methods: {
+    reciveIndex (index) {
+      console.log(index)
     }
   }
 }

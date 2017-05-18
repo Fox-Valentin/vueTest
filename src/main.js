@@ -5,10 +5,12 @@ import layout from '@/components/layout'
 // import Vuex from 'vuex'
 import indexPage from '@/components/pages/indexPage'
 import VRouter from 'vue-router'
+import Vueresource from 'vue-resource'
 // import Hello2 from '@/components/Hello2'
 Vue.config.productionTip = false
 /* eslint-disable no-new */
 Vue.use(VRouter)
+Vue.use(Vueresource)
 // Vue.use(Vuex)
 let router = new VRouter({
   mode: 'history',

@@ -8,6 +8,17 @@ if (!process.env.NODE_ENV) {
 var opn = require('opn')
 var path = require('path')
 var express = require('express')
+// var jsonServer = require('json-server')
+// var apiserver = jsonServer.create()
+// var apirouter = jsonServer.router('db.json')
+// var middlewares = jsonServer.defaults()
+
+// apiserver.use(middlewares)
+// apiserver.use('/api', apirouter)
+// apiserver.listen(3000, () => {
+//   console.log('JSON Server is running')
+// })
+
 var webpack = require('webpack')
 var proxyMiddleware = require('http-proxy-middleware')
 var webpackConfig = process.env.NODE_ENV === 'testing'
@@ -81,6 +92,32 @@ devMiddleware.waitUntilValid(() => {
   _resolve()
 })
 
+var apiserver = express()
+var bodyParser = require('body-parser')
+apiserver.use(bodyParser.urlencoded({ extended: true }))
+apiserver.use(bodyParser.json())
+var apiRouter = express.Router()
+var fs = require('fs')
+apiRouter.route('/:apiName').all(function (req, res) {
+  fs.readFile('./db.json', 'utf-8', function (err, data) {
+    if (err) throw err
+    var data = JSON.parse(data)
+    if (data[req.params.apiName]) {
+      res.json(data[req.params.apiName])  
+    }
+    else {
+      res.send('no such api name')
+    }
+  })
+})
+apiserver.use('/api', apiRouter)
+apiserver.listen(3000, function (err) {
+  if (err) {
+    console.log(err)
+    return
+  }
+  console.log('Listening at http://localhost:3000\n')
+})
 var server = app.listen(port)
 
 module.exports = {
